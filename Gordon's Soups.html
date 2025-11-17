@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>Gordon's Soup Collection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #2d2416;
+            background: #faf8f5;
+        }
+        
+        .container {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+        
+        .recipe {
+            min-height: 100vh;
+            background: #fffef9;
+            padding: 20px;
+            display: none;
+        }
+        
+        .recipe.active {
+            display: block;
+        }
+        
+        .recipe h1 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid;
+        }
+        
+        /* Individual recipe colors */
+        #recipe-0 h1 { color: #8b6914; border-color: #8b6914; } /* Classic Chicken - golden brown */
+        #recipe-1 h1 { color: #b8572a; border-color: #b8572a; } /* Albondigas - tomato red-brown */
+        #recipe-2 h1 { color: #a0826d; border-color: #a0826d; } /* Congee - warm tan */
+        #recipe-3 h1 { color: #c9882a; border-color: #c9882a; } /* Peanut Coconut - peanut gold */
+        #recipe-4 h1 { color: #8b4513; border-color: #8b4513; } /* White Bean Sausage - saddle brown */
+        #recipe-5 h1 { color: #6b5d4f; border-color: #6b5d4f; } /* Miso - umami brown */
+        #recipe-6 h1 { color: #d4a574; border-color: #d4a574; } /* Thai Coconut - coconut cream */
+        #recipe-7 h1 { color: #daa520; border-color: #daa520; } /* Avgolemono - lemon gold */
+        #recipe-8 h1 { color: #7c9a5c; border-color: #7c9a5c; } /* Pozole Verde - dry green */
+        #recipe-9 h1 { color: #a0522d; border-color: #a0522d; } /* Moroccan Lentil - sienna lentil */
+        #recipe-10 h1 { color: #9a6324; border-color: #9a6324; } /* West African - earthy brown */
+        #recipe-11 h1 { color: #a52a2a; border-color: #a52a2a; } /* Chili - chili brown-red */
+        
+        .recipe h3 {
+            font-size: 1.1em;
+            margin: 20px 0 10px 0;
+            color: #5c4d3a;
+            font-style: italic;
+        }
+        
+        .recipe ul {
+            margin: 10px 0 20px 20px;
+        }
+        
+        .recipe li {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+        
+        .recipe ol {
+            margin: 10px 0 20px 20px;
+        }
+        
+        .recipe ol li {
+            margin: 12px 0;
+            line-height: 1.6;
+        }
+        
+        .note {
+            background: #fef5e7;
+            border-left: 4px solid #d4a574;
+            padding: 12px;
+            margin: 15px 0;
+            font-style: italic;
+            color: #6b5d4f;
+        }
+        
+        .stovetop {
+            background: #f5f0e8;
+            border-left: 4px solid #8b6914;
+            padding: 15px;
+            margin: 20px 0;
+            line-height: 1.7;
+            color: #3d3426;
+        }
+        
+        .nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #4a3f2e;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        
+        .nav button {
+            background: #8b6914;
+            color: #fffef9;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            min-width: 80px;
+        }
+        
+        .nav button:active {
+            background: #6b5410;
+        }
+        
+        .nav button:disabled {
+            background: #6b5d4f;
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        
+        .counter {
+            color: #faf8f5;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .home-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #8b6914;
+            color: #fffef9;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            z-index: 100;
+        }
+        
+        .home-btn:active {
+            background: #6b5410;
+        }
+        
+        .toc {
+            min-height: 100vh;
+            background: #fffef9;
+            padding: 20px 20px 80px 20px;
+        }
+        
+        .toc.hidden {
+            display: none;
+        }
+        
+        .toc h1 {
+            font-size: 2em;
+            margin-bottom: 5px;
+            color: #4a3f2e;
+            text-align: center;
+        }
+        
+        .toc .subtitle {
+            text-align: center;
+            color: #8b7355;
+            font-style: italic;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+        
+        .toc-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .toc-list li {
+            margin: 0;
+            padding: 0;
+        }
+        
+        .toc-list button {
+            width: 100%;
+            text-align: left;
+            background: #fffef9;
+            border: none;
+            border-bottom: 1px solid #e8dcc8;
+            padding: 18px 15px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 600;
+        }
+        
+        /* Individual TOC item colors */
+        .toc-item-1 { color: #8b6914; }
+        .toc-item-2 { color: #b8572a; }
+        .toc-item-3 { color: #a0826d; }
+        .toc-item-4 { color: #c9882a; }
+        .toc-item-5 { color: #8b4513; }
+        .toc-item-6 { color: #6b5d4f; }
+        .toc-item-7 { color: #d4a574; }
+        .toc-item-8 { color: #daa520; }
+        .toc-item-9 { color: #7c9a5c; }
+        .toc-item-10 { color: #a0522d; }
+        .toc-item-11 { color: #9a6324; }
+        .toc-item-12 { color: #a52a2a; }
+        
+        .toc-list button:active {
+            background: #f5f0e8;
+        }
+        
+        .toc-list button:last-child {
+            border-bottom: none;
+        }
+        
+        /* Add padding to bottom of recipes for nav clearance */
+        .recipe {
+            padding-bottom: 80px;
+        }
+        
+        /* Touch-friendly spacing */
+        @media (max-width: 768px) {
+            .recipe {
+                padding: 15px;
+            }
+            
+            .recipe h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Table of Contents -->
+        <div class="toc" id="toc">
+            <h1>Gordon's Soup Collection</h1>
+            <p class="subtitle">Instant Pot recipes with stovetop adaptations</p>
+            <ul class="toc-list">
+                <li><button onclick="showRecipe(0)" class="toc-item-1">1. Classic Chicken Soup</button></li>
+                <li><button onclick="showRecipe(1)" class="toc-item-2">2. Mexican Albondigas Soup</button></li>
+                <li><button onclick="showRecipe(2)" class="toc-item-3">3. Rice Congee</button></li>
+                <li><button onclick="showRecipe(3)" class="toc-item-4">4. Peanut Coconut Chicken Curry</button></li>
+                <li><button onclick="showRecipe(4)" class="toc-item-5">5. White Bean & Sausage Stew</button></li>
+                <li><button onclick="showRecipe(5)" class="toc-item-6">6. Ginger-Lemongrass Miso Soup with Seared Beef</button></li>
+                <li><button onclick="showRecipe(6)" class="toc-item-7">7. Thai Coconut Curry with Squash & Chicken</button></li>
+                <li><button onclick="showRecipe(7)" class="toc-item-8">8. Greek Avgolemono</button></li>
+                <li><button onclick="showRecipe(8)" class="toc-item-9">9. Pozole Verde</button></li>
+                <li><button onclick="showRecipe(9)" class="toc-item-10">10. Moroccan Lentil Soup with Sweet Potato</button></li>
+                <li><button onclick="showRecipe(10)" class="toc-item-11">11. West African Peanut Stew</button></li>
+                <li><button onclick="showRecipe(11)" class="toc-item-12">12. Mixed Bean Chili with Beef</button></li>
+            </ul>
+        </div>
+
+        <!-- Recipe 1: Classic Chicken Soup -->
+        <div class="recipe" id="recipe-0">
+            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <h1>Classic Chicken Soup</h1>
+            
+            <h3>Ingredients:</h3>
+            <ul>
+                <li>2 lbs bone-in, skin-on chicken thighs</li>
+                <li>6 cups chicken broth</li>
+                <li>3 carrots, cut in chunks</li>
+                <li>2 medium potatoes, cubed</li>
+                <li>1 sweet potato, cubed</li>
+                <li>3 celery ribs, chopped</li>
+                <li>1 onion, diced</li>
+                <li>2 shallots, sliced</li>
+                <li>4 garlic cloves, minced</li>
+                <li>2-3 sprigs fresh thyme (or 1 tsp dried)</li>
+                <li>2 bay leaves</li>
+                <li>Salt, pepper</li>
+                <li>Cilantro and green onion for serving</li>
+                <li>Lemon wedges</li>
+            </ul>
+            
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Sauté mode: brown chicken thighs skin-side down, 4-5 minutes. Remove, set aside.</li>
+                <li>Pour out excess fat, leave ~1 tbsp. Add onion, shallots, celery, garlic. Sauté 3 minutes.</li>
+                <li>Add broth, scrape bottom clean. Add chicken, carrots, potatoes, sweet potato, thyme, bay leaves. Season generously with salt and pepper.</li>
+                <li>Pressure cook high, 15 minutes. Natural release 10 minutes, then quick release.</li>
+                <li>Remove chicken. Shred meat, discard bones and skin. Return meat to pot.</li>
+                <li>Taste, adjust salt. Squeeze lemon into bowls. Top with cilantro and green onion.</li>
+            </ol>
+            
+            <div class="stovetop">
+                <strong>On the stovetop:</strong> Brown the chicken in a large pot, then build the soup by sautéing aromatics and adding broth and vegetables. Simmer covered for 30-35 minutes instead of pressure cooking, then shred the chicken and return it to the pot. Everything else stays the same.
+            </div>
+        </div>
+
+        <!-- Recipe 2: Albondigas -->
+        <div class="recipe" id="recipe-1">
+            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <h1>Mexican Albondigas Soup</h1>
+            <h3>Meatballs:</h3>
+            <ul>
+                <li>1 lb ground beef</li>
+                <li>1/3 cup uncooked white rice</li>
+                <li>1 egg</li>
+                <li>2 cloves garlic, minced</li>
+                <li>1/4 cup cilantro, chopped</li>
+                <li>1 tsp cumin</li>
+                <li>1 tsp oregano</li>
+                <li>Salt, pepper</li>
+            </ul>
+            
+            <h3>Soup:</h3>
+            <ul>
+                <li>1 can (14oz) crushed tomatoes</li>
+                <li>4-6 cups beef or chicken broth</li>
+                <li>1 onion, diced</li>
+                <li>2 shallots, diced</li>
+                <li>2 cloves garlic, minced</li>
+                <li>2-3 carrots, diced</li>
+                <li>2 medium potatoes, diced</li>
+                <li>1 sweet potato, diced</li>
+                <li>2 celery ribs, diced</li>
+                <li>1/4 head cabbage, chopped</li>
+                <li>1 tsp cumin</li>
+                <li>1 tsp oregano</li>
+                <li>1 bay leaf</li>
+                <li>Salt, pepper</li>
+                <li>Fresh cilantro and lime wedges for serving</li>
+            </ul>
+            
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Mix meatball ingredients and roll into 1.5-inch balls.</li>
+                <li>Sauté mode: cook onion and shallot in oil 3-4 minutes. Add garlic, cumin, oregano - 30 seconds.</li>
+                <li>Add crushed tomatoes, broth, carrots, potatoes, sweet potato, celery. Season with salt, pepper, bay leaf.</li>
+                <li>Nestle meatballs into liquid.</li>
+                <li>Pressure cook high 10 minutes. Natural release 5 minutes, then quick release.</li>
+                <li>Add chopped cabbage, set to sauté 3-4 minutes.</li>
+                <li>Finish with fresh cilantro and lime juice.</li>
+            </ol>
+            
+            <div class="note">
+                The rice cooks inside the meatballs during pressure cooking - this is the traditional method. Optional: brown meatballs in Wonder Oven 4-5 minutes per side for better flavor and texture.
+            </div>
+            
+            <div class="stovetop">
+                <strong>On the stovetop:</strong> 
+                After building the broth base with aromatics and vegetables, nestle the meatballs in and bring to a boil, then simmer covered for 25-30 minutes. The raw rice in the meatballs will cook through in that time. Add the cabbage at the end and simmer a few more minutes.
+            </div>
+        </div>
+
+        <!-- Recipe 3: Rice Congee -->
+        <div class="recipe" id="recipe-2">
+            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <h1>Rice Congee</h1>
+            <h3>Ingredients:</h3>
+            <ul>
+                <li>1 cup jasmine rice, rinsed</li>
+                <li>8 cups chicken stock or water</li>
+                <li>1 lb chicken thighs, cut into 1-inch pieces</li>
+                <li>1 large onion, diced</li>
+                <li>6-8 shiitake mushrooms, sliced</li>
+                <li>2-inch piece ginger, sliced</li>
+                <li>Salt to taste</li>
+            </ul>
+            
+            <h3>Toppings:</h3>
+            <ul>
+                <li>Sliced green onions</li>
+                <li>Sesame oil (drizzle generously)</li>
+                <li>White pepper</li>
+                <li>Soy sauce</li>
+                <li>Crispy fried shallots</li>
+                <li>Soft-boiled egg</li>
+            </ul>
+            
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Add all base ingredients to Instant Pot.</li>
+                <li>Pressure cook high 30 minutes.</li>
+                <li>Natural release 10 minutes, then quick release remaining pressure.</li>
+                <li>Shred chicken with forks right in the pot.</li>
+                <li>Stir - it'll thicken as it sits.</li>
+                <li>Serve with desired toppings.</li>
+            </ol>
+            
+            <div class="note">
+                1:8 rice-to-liquid ratio gives proper congee texture. For thicker, let sit 10 minutes. For thinner, add boiling water.
+            </div>
+            
+            <div class="stovetop">
+                <strong>On the stovetop:</strong> Bring everything to a boil in a large pot, then reduce to a low simmer and cook uncovered for 60-90 minutes, stirring occasionally to prevent sticking. The rice will gradually break down into porridge. Stir more frequently in the last 30 minutes and adjust consistency with water as needed.
+            </div>
+        </div>
+
+        <!-- Recipe 4: Peanut Coconut Curry -->
+        <div class="recipe" id="recipe-3">
+            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <h1>Peanut Coconut Chicken Curry</h1>
+            <h3>Ingredients:</h3>
+            <ul>
+                <li>1.5-2 lbs chicken thighs, cut into chunks</li>
+                <li>1 medium onion, diced</li>
+                <li>2 shallots, minced</li>
+                <li>4 cloves garlic, minced</li>
+                <li>1 tbsp fresh ginger, minced (or 1 tsp ground)</li>
+                <li>1 medium potato, diced into 1-inch chunks</li>
+                <li>2 medium carrots, diced into 1-inch chunks</li>
+                <li>1 can (13-14 oz) coconut milk</li>
+                <li>1 cup chicken broth</li>
+                <li>3 tbsp peanut butter</li>
+                <li>2-3 tbsp curry powder or paste</li>
+                <li>1-2 tbsp fish sauce</li>
+                <li>1-2 limes</li>
+                <li>2 tbsp oil</li>
+                <li>Salt to taste</li>
+                <li>Cilantro for garnish (optional)</li>
+            </ul>
+            
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Set Instant Pot to sauté mode. Add oil.</li>
+                <li>Cook onion and shallots 2 minutes until softened. Add garlic and ginger, cook 1 minute.</li>
+                <li>Add curry powder/paste, stir 30 seconds until fragrant.</li>
+                <li>Add chicken chunks, stir to coat in spices.</li>
+                <li>Add coconut milk, broth, peanut butter, potato, and carrot. Stir to combine.</li>
+                <li>Seal lid, set to pressure cook high for 8 minutes.</li>
+                <li>Quick release pressure.</li>
+                <li>Stir well. Add fish sauce, juice of half a lime, and salt to taste. Adjust thickness with more broth if needed, or simmer uncovered to reduce.</li>
+                <li>Serve over rice, garnish with cilantro and lime wedges.</li>
+            </ol>
+            
+            <div class="stovetop">
+                <strong>On the stovetop:</strong> 
+                Build the curry by sautéing aromatics and blooming spices, then add the chicken to brown lightly before pouring in the coconut milk, broth, peanut butter, and vegetables. Simmer covered for 25-30 minutes until everything is tender, then finish with fish sauce and lime.
+            </div>
+        </div>
+
+        <!-- Recipe 5: Bean & Sausage Stew -->
+        <div class="recipe" id="recipe-4">
+            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <h1>White Bean & Sausage Stew</h1>
+            <h3>Ingredients:</h3>
+            <ul>
+                <li>1 lb chicken apple sausages (or sausage of choice), sliced into rounds</li>
+                <li>1 onion, diced</li>
+                <li>2-3 carrots, diced</li>
+                <li>2-3 celery ribs, chopped</li>
+                <li>3-4 cloves garlic, minced</li>
+                <li>2-3 medium potatoes, cubed (1-inch chunks)</li>
+                <li>1 can (28oz) crushed tomatoes</li>
+                <li>4 cups chicken or vegetable broth</li>
+                <li>1 can white beans (cannellini or great northern), drained</li>
+                <li>1 tsp paprika</li>
+                <li>1 tsp dried thyme</li>
+                <li>1 bay leaf</li>
+                <li>Salt and pepper</li>
+                <li>Splash of red wine or apple cider vinegar (for finishing)</li>
+                <li>Olive oil</li>
+            </ul>
+            
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Sauté mode: heat olive oil, cook onions 3-4 minutes until soft.</li>
+                <li>Add garlic, cook 30 seconds.</li>
+                <li>Add sliced sausages, brown 2-3 minutes.</li>
+                <li>Add carrots, celery, and potatoes. Stir to combine.</li>
+                <li>Toast spices: add paprika, thyme, bay leaf, pepper. Cook 30 seconds.</li>
+                <li>Pour in crushed tomatoes, broth, and drained beans. Scrape any stuck bits from bottom (important - prevents burn notice).</li>
+                <li>Lid on, seal valve. High pressure 8 minutes.</li>
+                <li>Natural release 10 minutes, then quick release remaining pressure.</li>
+                <li>Stir, taste, add salt. Add splash of vinegar to balance sweetness of sausage.</li>
+                <li>Serve. Freezes well, better the next day.</li>
+            </ol>
+            
+            <div class="note">
+                For better browning, cook sausage rounds in Wonder Oven instead of IP sauté mode - crisps them up nicely.
+            </div>
+            
+            <div class="stovetop">
+                <strong>On the stovetop:</strong> 
+                Sauté the aromatics and sausage, toast the spices, then add all the liquids and vegetables. Bring to a boil, reduce to simmer, and cook covered for 25-30 minutes until the potatoes are tender. Add the beans near the end to heat through, then finish with vinegar and seasoning.
+            </div>
+        </div>
+
+        <!-- Recipe 6: Ginger-Lemongrass Miso -->
+        <div class="recipe" id="recipe-5">
+            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <h1>Ginger-Lemongrass Miso Soup with Seared Beef</h1>
+            <h3>Broth Ingredients:</h3>
+            <ul>
+                <li>4 cups chicken bone broth</li>
+                <li>2 cups vegetable broth</li>
+                <li>2 stalks lemongrass, bruised and cut into 3-inch pieces</li>
+                <li>4-inch piece ginger, sliced into coins</li>
+                <li>3-4 shallots, halved</li>
+                <li>4 garlic cloves, smashed</li>
+                <li>1 onion, sliced</li>
+                <li>12 oz baby potatoes, halved</li>
+                <li>8 oz shiitake mushrooms, sliced</li>
+                <li>3 tbsp white miso paste</li>
+                <li>2 tbsp soy sauce</li>
+                <li>1 tbsp fish sauce</li>
+                <li>Oil for cooking</li>
+            </ul>
+            
+            <h3>For Serving:</h3>
+            <ul>
+                <li>1 ribeye steak (seared separately, sliced thin)</li>
+                <li>Rice noodles (4-6 oz, softened per package)</li>
+                <li>3-4 heads bok choy</li>
+                <li>Bean sprouts</li>
+                <li>Scallions, cilantro, lime wedges, chili oil</li>
+                <li>Soft-boiled eggs (optional)</li>
+                <li>Cubed tofu (optional)</li>
+            </ul>
+            
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Instant Pot sauté mode: cook shallots, onion, garlic, ginger, lemongrass in oil 3-4 minutes until fragrant.</li>
+                <li>Add both broths, potatoes, mushrooms. Pressure cook high 8 minutes.</li>
+                <li>Natural release 5 minutes, then quick release.</li>
+                <li>While broth cooks, sear ribeye: Pat dry, salt heavily. Screaming hot pan, sear 3-4 min per side for medium-rare. Rest 5 min, slice thin against grain.</li>
+                <li>Switch Instant Pot to sauté, bring to simmer. Scoop out 1 cup liquid, whisk in miso until dissolved, return to pot.</li>
+                <li>Add soy sauce and fish sauce. Taste and adjust.</li>
+                <li>Add bok choy, simmer 2 minutes until wilted. Remove lemongrass stalks.</li>
+                <li>Soften rice noodles per package (usually hot water soak 10 min or brief boil). Drain.</li>
+                <li>Assemble bowls: noodles, ladle broth with vegetables, top with sliced ribeye, bean sprouts, scallions, cilantro. Add soft-boiled eggs and/or tofu if using. Lime wedge, chili oil.</li>
+            </ol>
+            
+            <div class="stovetop">
+                <strong>On the stovetop:</strong> 
+                Build the aromatic broth by sautéing the ginger, lemongrass, and alliums, then add the broths and vegetables and simmer for 12-15 minutes. While that cooks, sear your steak separately. Finish the broth by whisking in miso, adding the greens, and removing the lemongrass stalks before assembling bowls with noodles and toppings.
+            </div>
+        </div>
+
+        <!-- Recipe 7: Thai Coconut Curry -->
+        <div class="recipe" id="recipe-6">
+            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <h1>Thai Coconut Curry with Squash & Chicken</h1>
+            <h3>Ingredients:</h3>
+            <ul>
+                <li>1.5-2 lbs bone-in, skin-on chicken thighs</li>
+                <li>1 delicata squash (or winter squash), cut into chunks</li>
+                <li>1 onion, diced</li>
+                <li>2 shallots, minced</li>
+                <li>4 cloves garlic, minced</li>
+                <li>2 tbsp fresh ginger, minced</li>
+                <li>1-2 cans (13-14 oz) coconut milk</li>
+                <li>2-3 cups chicken broth or stock</li>
+                <li>2-3 tbsp Thai curry paste (red or green)</li>
+                <li>2 tbsp fish sauce (plus more for finishing)</li>
+                <li>8 oz shiitake mushrooms, sliced</li>
+                <li>2 limes</li>
+                <li>Cilantro, Thai basil if available</li>
+                <li>Oil for cooking</li>
+                <li>Salt to taste</li>
+            </ul>
+            
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Sauté mode: heat oil, cook onion and shallots 3 minutes until softened. Add garlic, ginger, curry paste - bloom 30 seconds.</li>
+                <li>Add chicken thighs (skin side down first to render fat, or just nestle them in).</li>
+                <li>Add coconut milk, broth, and fish sauce.</li>
+                <li>Pressure cook high 10 minutes.</li>
+                <li>Natural release 5 minutes, then quick release.</li>
+                <li>Remove chicken, shred or chop meat (discard bones, keep skin if crispy). Return meat to pot.</li>
+                <li>Add squash chunks and mushrooms. Sauté mode 5-8 minutes until squash is tender but not mushy.</li>
+                <li>Finish with lime juice and more fish sauce to taste. Stir in cilantro.</li>
+                <li>Serve over rice.</li>
+            </ol>
+            
+            <div class="note">
+                Chicken bone broth is preferred over stock for richer flavor. For crispier skin, brown chicken thighs in Wonder Oven before adding to pot.
+            </div>
+            
+            <div class="stovetop">
+                <strong>On the stovetop:</strong> 
+                Brown the chicken thighs in a large pot to render the fat and develop flavor, then remove them. Build your curry base with the aromatics and paste, add the coconut milk and broth, and return the chicken to simmer covered for 25-30 minutes. Shred the meat, add the squash and mushrooms, and simmer uncovered until tender.
+            </div>
+        </div>
+
+        <!-- Recipe 8: Avgolemono -->
+        <div class="recipe" id="recipe-7">
+            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <h1>Greek Avgolemono (Chicken Lemon Soup)</h1>
+            <h3>Ingredients:</h3>
+            <ul>
+                <li>1.5-2 lbs bone-in, skin-on chicken thighs (or chicken breast)</li>
+                <li>6 cups chicken broth</li>
+                <li>3/4 cup white rice (or orzo)</li>
+                <li>1 onion, quartered</li>
+                <li>2 carrots, cut into chunks</li>
+                <li>2 celery ribs, cut into chunks</li>
+                <li>3 large eggs</li>
+                <li>Juice of 2-3 lemons (about 1/2 cup)</li>
+                <li>Salt and pepper</li>
+                <li>Fresh dill for serving</li>
+                <li>Olive oil</li>
+            </ul>
+            
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Add chicken, broth, onion, carrots, and celery to Instant Pot. Season with salt and pepper.</li>
+                <li>Pressure cook high 12 minutes. Natural release 10 minutes, then quick release.</li>
+                <li>Remove chicken and vegetables. Shred chicken, discard bones and skin. Set aside. Discard vegetables (or save for another use).</li>
+                <li>Strain broth if desired, return to pot. Add rice. Pressure cook high 3 minutes. Quick release.</li>
+                <li>Switch to sauté mode, bring to gentle simmer.</li>
+                <li>In a bowl, whisk eggs and lemon juice together until frothy.</li>
+                <li>Slowly ladle 1-2 cups hot broth into egg mixture while whisking constantly (this tempers the eggs).</li>
+                <li>Slowly pour egg-lemon mixture back into pot while stirring constantly. Do NOT let it boil or eggs will scramble.</li>
+                <li>Add shredded chicken back. Stir gently. Turn off heat.</li>
+                <li>Taste, adjust salt and lemon. Serve immediately with fresh dill and olive oil drizzle.</li>
+            </ol>
+            
+            <div class="note">
+                The egg-lemon liaison creates a silky, creamy texture without dairy. The key is tempering the eggs slowly and not boiling after adding them.
+            </div>
+            
+            <div class="stovetop">
+                <strong>On the stovetop:</strong> Simmer the chicken in broth with aromatics for 30 minutes, then remove and shred it. Strain the broth, cook the rice in it until tender (about 15 minutes), then temper the egg-lemon mixture by slowly whisking in hot broth before stirring it back into the pot off heat. Add the chicken back and serve immediately.
+            </div>
+        </div>
+
+        <!-- Recipe 9: Pozole Verde -->
+        <div class="recipe" id="recipe-8">
+            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <h1>Pozole Verde</h1>
+            <h3>Ingredients:</h3>
+            <ul>
+                <li>2 lbs pork shoulder, cut into 2-inch chunks (or chicken thighs)</li>
+                <li>2 cans (25 oz each) hominy, drained</li>
+                <li>1 lb tomatillos, husked and halved</li>
+                <li>2 poblano peppers, seeded and chopped</li>
+                <li>1-2 jalapeños, chopped (adjust for heat)</li>
+                <li>1 large onion, quartered</li>
+                <li>6 cloves garlic</li>
+                <li>1 bunch cilantro (stems and leaves separated)</li>
+                <li>6 cups chicken broth</li>
+                <li>2 tsp dried oregano (Mexican oregano if possible)</li>
+                <li>1 tsp cumin</li>
+                <li>Salt</li>
+                <li>Lime wedges, sliced radish, shredded cabbage, avocado, more cilantro for serving</li>
+            </ul>
+            
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Add tomatillos, poblanos, jalapeños, onion, garlic, cilantro stems, and 2 cups broth to blender. Blend until smooth.</li>
+                <li>Instant Pot sauté mode: season pork with salt. Brown in batches, about 3-4 minutes per side. Remove and set aside.</li>
+                <li>Pour in green sauce, scrape bottom. Add remaining broth, oregano, cumin, and pork.</li>
+                <li>Pressure cook high 35 minutes (25 for chicken). Natural release 15 minutes, then quick release.</li>
+                <li>Shred pork with forks in the pot (or chop chicken).</li>
+                <li>Add hominy. Sauté mode, simmer 5 minutes.</li>
+                <li>Taste, adjust salt. Stir in chopped cilantro leaves.</li>
+                <li>Serve with lime, radish, cabbage, avocado on the side.</li>
+            </ol>
+            
+            <div class="note">
+                Wonder Oven browns pork chunks more evenly than IP sauté mode - recommended if you have time.
+            </div>
+            
+            <div class="stovetop">
+                <strong>On the stovetop:</strong> 
+                Blend your green sauce, then brown the pork in a large pot and build the soup with the sauce and broth. Simmer covered for 90 minutes (or 45 for chicken) until the meat is very tender and shreddable. Add the hominy near the end and simmer to heat through, then serve with all the fresh toppings.
+            </div>
+        </div>
+
+        <!-- Recipe 10: Moroccan Lentil -->
+        <div class="recipe" id="recipe-9">
+            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <h1>Moroccan Lentil Soup with Sweet Potato</h1>
+            <h3>Ingredients:</h3>
+            <ul>
+                <li>1.5 cups red lentils, rinsed</li>
+                <li>1 large sweet potato, diced</li>
+                <li>2 carrots, diced</li>
+                <li>1 onion, diced</li>
+                <li>4 cloves garlic, minced</li>
+                <li>1 can (14oz) diced tomatoes</li>
+                <li>6 cups vegetable broth</li>
+                <li>2 tsp cumin</li>
+                <li>2 tsp coriander</li>
+                <li>1 tsp turmeric</li>
+                <li>1 tsp ginger (fresh or ground)</li>
+                <li>1/2 tsp cinnamon</li>
+                <li>1/4 tsp cayenne (optional)</li>
+                <li>2 tbsp tomato paste</li>
+                <li>Juice of 1-2 lemons</li>
+                <li>Salt and pepper</li>
+                <li>Olive oil</li>
+                <li>Fresh cilantro for serving</li>
+            </ul>
+            
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Sauté mode: heat olive oil, cook onion 3-4 minutes until soft.</li>
+                <li>Add garlic, cumin, coriander, turmeric, ginger, cinnamon, cayenne. Stir 30 seconds until fragrant.</li>
+                <li>Add tomato paste, cook 1 minute.</li>
+                <li>Add lentils, sweet potato, carrots, diced tomatoes, and broth. Stir well.</li>
+                <li>Pressure cook high 10 minutes. Natural release 10 minutes, then quick release.</li>
+                <li>Stir - lentils will have broken down into thick, creamy texture. Add water if too thick.</li>
+                <li>Add lemon juice, salt to taste.</li>
+                <li>Serve with cilantro and olive oil drizzle.</li>
+            </ol>
+            
+            <div class="note">
+                Red lentils break down completely, creating natural creaminess. Warming spices make this incredibly aromatic.
+            </div>
+            
+            <div class="stovetop">
+                <strong>On the stovetop:</strong> 
+                Sauté the aromatics and bloom all the spices in olive oil, then add the tomato paste and cook it out for a minute. Add everything else, bring to a boil, then simmer uncovered for 25-30 minutes, stirring occasionally. The lentils will break down and thicken the soup naturally. Finish with lemon and fresh herbs.
+            </div>
+        </div>
+
+        <!-- Recipe 11: West African Peanut Stew -->
+        <div class="recipe" id="recipe-10">
+            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <h1>West African Peanut Stew</h1>
+            <h3>Ingredients:</h3>
+            <ul>
+                <li>1.5 lbs chicken thighs, cut into chunks (or leave vegetarian)</li>
+                <li>2 large sweet potatoes, diced</li>
+                <li>1 bunch collard greens or kale, stems removed, chopped</li>
+                <li>1 large onion, diced</li>
+                <li>4 cloves garlic, minced</li>
+                <li>2 tbsp fresh ginger, minced</li>
+                <li>1 can (28oz) crushed tomatoes</li>
+                <li>4 cups chicken or vegetable broth</li>
+                <li>1/2 cup peanut butter (natural, unsweetened)</li>
+                <li>2 tsp cumin</li>
+                <li>2 tsp coriander</li>
+                <li>1 tsp paprika</li>
+                <li>1/2 tsp cayenne (adjust to taste)</li>
+                <li>Salt and pepper</li>
+                <li>Oil for cooking</li>
+                <li>Crushed peanuts and cilantro for serving</li>
+            </ul>
+            
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Sauté mode: heat oil, cook onion 3-4 minutes until soft.</li>
+                <li>Add garlic and ginger, cook 1 minute.</li>
+                <li>Add cumin, coriander, paprika, cayenne. Stir 30 seconds.</li>
+                <li>Add chicken (if using), brown lightly 2-3 minutes.</li>
+                <li>Add crushed tomatoes, broth, peanut butter, sweet potatoes. Stir well to incorporate peanut butter.</li>
+                <li>Pressure cook high 10 minutes. Quick release.</li>
+                <li>Switch to sauté mode. Add chopped greens, simmer 3-5 minutes until wilted.</li>
+                <li>Taste, adjust salt and heat.</li>
+                <li>Serve over rice with crushed peanuts and cilantro.</li>
+            </ol>
+            
+            <div class="note">
+                Earthy, deeply savory, tomato-forward. Different from the Thai peanut curry - this is richer and has more body. If using chicken, brown in Wonder Oven first for better flavor.
+            </div>
+            
+            <div class="stovetop">
+                <strong>On the stovetop:</strong> 
+                Build the stew by sautéing aromatics, blooming spices, and browning the chicken if using. Add tomatoes, broth, peanut butter, and sweet potatoes, then simmer covered for 25-30 minutes until everything is tender. Stir in the greens at the end and simmer until wilted. The peanut butter will create natural thickness as it cooks.
+            </div>
+        </div>
+
+        <!-- Recipe 12: Mixed Bean Chili -->
+        <div class="recipe" id="recipe-11">
+            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <h1>Mixed Bean Chili with Beef</h1>
+            <h3>Ingredients:</h3>
+            <ul>
+                <li>1.5-2 lbs ground beef</li>
+                <li>3-4 cups mixed dried beans (any combination: pinto, black, kidney, cranberry, etc.), soaked overnight</li>
+                <li>1 large onion, diced</li>
+                <li>1 poblano pepper, diced</li>
+                <li>1-2 jalapeños, diced (adjust for heat)</li>
+                <li>1 bell pepper, diced (optional)</li>
+                <li>6 cloves garlic, minced</li>
+                <li>2 cans (28oz total) crushed tomatoes</li>
+                <li>2-3 cups beef or chicken broth</li>
+                <li>3 tbsp chili powder</li>
+                <li>2 tsp cumin</li>
+                <li>1 tsp smoked paprika</li>
+                <li>1 tsp oregano</li>
+                <li>1/2 tsp cayenne (optional)</li>
+                <li>2 tbsp tomato paste</li>
+                <li>Salt and pepper</li>
+                <li>Oil for cooking</li>
+                <li>Lime wedges, cilantro, avocado, sour cream (omit for dairy-free), green onions for serving</li>
+            </ul>
+            
+            <h3>Instructions:</h3>
+            <ol>
+                <li>Soak beans: Cover with water, soak overnight. Or quick-soak: boil 2 minutes, remove from heat, cover and let sit 1 hour. Drain and rinse.</li>
+                <li>Sauté mode (or use Wonder Oven): brown ground beef in batches until well-browned. Break up chunks. Remove and set aside. Drain excess fat.</li>
+                <li>Sauté mode: cook onion and peppers 4-5 minutes until soft.</li>
+                <li>Add garlic, chili powder, cumin, smoked paprika, oregano, cayenne. Stir 30 seconds.</li>
+                <li>Add tomato paste, cook 1 minute.</li>
+                <li>Add browned beef, soaked beans, crushed tomatoes, and broth. Stir well. Season with salt and pepper.</li>
+                <li>Pressure cook high 25-30 minutes (depends on bean variety - older beans take longer).</li>
+                <li>Natural release 15 minutes, then quick release.</li>
+                <li>Check beans for tenderness. If not soft, simmer on sauté mode 10-15 minutes.</li>
+                <li>Taste, adjust seasoning. Chili thickens as it sits.</li>
+                <li>Serve with lime, cilantro, avocado, green onions.</li>
+            </ol>
+            
+            <div class="note">
+                Bean cooking times vary. If using canned beans instead, add them in step 9 after pressure cooking just to heat through (reduce cooking time to 10 minutes). Wonder Oven works great for browning the beef - better sear and less splatter than IP sauté mode.
+            </div>
+            
+            <div class="note">
+                Variations: Skip the beef for vegetarian. Add different chiles (ancho, chipotle). Stir in masa harina at the end for thickness. Add cocoa powder or coffee for depth.
+            </div>
+            
+            <div class="stovetop">
+                <strong>On the stovetop:</strong> 
+                Brown the beef in a large pot or Wonder Oven, then build the chili by sautéing vegetables and blooming spices. Add everything else and bring to a boil, then reduce to a low simmer. Cook covered for 90 minutes to 2 hours, stirring occasionally, until beans are completely tender. Add water if it gets too thick. Canned beans need only 30-40 minutes of simmering total.
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="nav">
+        <button id="prevBtn" onclick="changeRecipe(-1)">← Prev</button>
+        <span class="counter"><span id="current">1</span> / <span id="total">12</span></span>
+        <button id="nextBtn" onclick="changeRecipe(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentRecipe = -1; // -1 means TOC is showing
+        const totalRecipes = 12;
+        
+        function showTOC() {
+            document.getElementById('toc').classList.remove('hidden');
+            for (let i = 0; i < totalRecipes; i++) {
+                document.getElementById('recipe-' + i).classList.remove('active');
+            }
+            currentRecipe = -1;
+            updateNav();
+            window.scrollTo(0, 0);
+        }
+        
+        function showRecipe(index) {
+            document.getElementById('toc').classList.add('hidden');
+            for (let i = 0; i < totalRecipes; i++) {
+                document.getElementById('recipe-' + i).classList.remove('active');
+            }
+            document.getElementById('recipe-' + index).classList.add('active');
+            currentRecipe = index;
+            updateNav();
+            window.scrollTo(0, 0);
+        }
+        
+        function changeRecipe(direction) {
+            if (currentRecipe === -1) {
+                // From TOC, only allow Next to go to first recipe
+                if (direction === 1) {
+                    showRecipe(0);
+                }
+                return;
+            }
+            
+            let newIndex = currentRecipe + direction;
+            if (newIndex >= 0 && newIndex < totalRecipes) {
+                showRecipe(newIndex);
+            }
+        }
+        
+        function updateNav() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const currentSpan = document.getElementById('current');
+            
+            if (currentRecipe === -1) {
+                // On TOC
+                prevBtn.disabled = true;
+                nextBtn.disabled = false; // Enable Next to go to first recipe
+                currentSpan.textContent = 'Menu';
+            } else {
+                prevBtn.disabled = currentRecipe === 0;
+                nextBtn.disabled = currentRecipe === totalRecipes - 1;
+                currentSpan.textContent = currentRecipe + 1;
+            }
+        }
+        
+        // Touch swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            if (currentRecipe === -1) return; // Don't swipe on TOC
+            
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left - next recipe
+                    changeRecipe(1);
+                } else {
+                    // Swipe right - previous recipe
+                    changeRecipe(-1);
+                }
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', e => {
+            if (currentRecipe === -1) return;
+            
+            if (e.key === 'ArrowLeft') {
+                changeRecipe(-1);
+            } else if (e.key === 'ArrowRight') {
+                changeRecipe(1);
+            } else if (e.key === 'Escape') {
+                showTOC();
+            }
+        });
+        
+        // Initialize
+        updateNav();
+    </script>
+</body>
+</html>
