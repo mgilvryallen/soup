@@ -1,2 +1,2 @@
-# soup
-favorite soups for the instant pot
+# soup brother
+my favorite soups to make in the instant pot
