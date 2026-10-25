@@ -2,279 +2,348 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Soup Brother</title>
+    <meta name="description" content="12 favorite soups for the Instant Pot, with stovetop adaptations.">
+    <meta name="theme-color" content="#f7f3e9">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Soup Brother">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icons/icon-180.png">
     <style>
+        @font-face {
+            font-family: 'Rug Pull';
+            src: url('fonts/TAYRugPull.otf') format('opentype');
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Lumios Typewriter';
+            src: url('fonts/LumiosTypewriter-Old.ttf') format('truetype');
+            font-display: swap;
+        }
+
+        :root {
+            --parchment: #f7f3e9;
+            --paper: #fffdf7;
+            --ink: #2c2416;
+            --heading: #4a3f2f;
+            --green: #3d5a42;
+            --tan: #8b7759;
+            --light-tan: #c9bda5;
+            --muted: #6b5d4f;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Lumios Typewriter', Georgia, serif;
+            font-size: 17px;
             line-height: 1.6;
-            color: #2d2416;
-            background: #faf8f5;
+            color: var(--ink);
+            background-color: var(--parchment);
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 119, 89, 0.02) 2px, rgba(139, 119, 89, 0.02) 4px);
         }
-        
+
         .container {
-            max-width: 100%;
+            max-width: 640px;
+            margin: 0 auto;
             overflow-x: hidden;
         }
-        
+
         .recipe {
-            min-height: 100vh;
-            background: #fffef9;
-            padding: 20px;
             display: none;
+            padding: calc(70px + env(safe-area-inset-top)) 20px calc(100px + env(safe-area-inset-bottom));
         }
-        
+
         .recipe.active {
             display: block;
         }
-        
+
         .recipe h1 {
-            font-size: 1.8em;
+            font-family: 'Rug Pull', Georgia, serif;
+            font-weight: normal;
+            font-size: 30px;
+            line-height: 1.2;
+            color: var(--heading);
             margin-bottom: 10px;
             padding-bottom: 10px;
             border-bottom: 3px solid;
         }
-        
-        /* Individual recipe colors */
-        #recipe-0 h1 { color: #8b6914; border-color: #8b6914; } /* Classic Chicken - golden brown */
-        #recipe-1 h1 { color: #b8572a; border-color: #b8572a; } /* Albondigas - tomato red-brown */
-        #recipe-2 h1 { color: #a0826d; border-color: #a0826d; } /* Congee - warm tan */
-        #recipe-3 h1 { color: #c9882a; border-color: #c9882a; } /* Peanut Coconut - peanut gold */
-        #recipe-4 h1 { color: #8b4513; border-color: #8b4513; } /* White Bean Sausage - saddle brown */
-        #recipe-5 h1 { color: #6b5d4f; border-color: #6b5d4f; } /* Miso - umami brown */
-        #recipe-6 h1 { color: #d4a574; border-color: #d4a574; } /* Thai Coconut - coconut cream */
-        #recipe-7 h1 { color: #daa520; border-color: #daa520; } /* Avgolemono - lemon gold */
-        #recipe-8 h1 { color: #7c9a5c; border-color: #7c9a5c; } /* Pozole Verde - dry green */
-        #recipe-9 h1 { color: #a0522d; border-color: #a0522d; } /* Moroccan Lentil - sienna lentil */
-        #recipe-10 h1 { color: #9a6324; border-color: #9a6324; } /* West African - earthy brown */
-        #recipe-11 h1 { color: #a52a2a; border-color: #a52a2a; } /* Chili - chili brown-red */
-        
+
+        /* Each recipe keeps its own accent color */
+        #recipe-0 h1 { border-color: #8b6914; }
+        .toc-item-1 .toc-num { color: #8b6914; }
+        #recipe-1 h1 { border-color: #b8572a; }
+        .toc-item-2 .toc-num { color: #b8572a; }
+        #recipe-2 h1 { border-color: #a0826d; }
+        .toc-item-3 .toc-num { color: #a0826d; }
+        #recipe-3 h1 { border-color: #c9882a; }
+        .toc-item-4 .toc-num { color: #c9882a; }
+        #recipe-4 h1 { border-color: #8b4513; }
+        .toc-item-5 .toc-num { color: #8b4513; }
+        #recipe-5 h1 { border-color: #6b5d4f; }
+        .toc-item-6 .toc-num { color: #6b5d4f; }
+        #recipe-6 h1 { border-color: #d4a574; }
+        .toc-item-7 .toc-num { color: #d4a574; }
+        #recipe-7 h1 { border-color: #daa520; }
+        .toc-item-8 .toc-num { color: #daa520; }
+        #recipe-8 h1 { border-color: #7c9a5c; }
+        .toc-item-9 .toc-num { color: #7c9a5c; }
+        #recipe-9 h1 { border-color: #a0522d; }
+        .toc-item-10 .toc-num { color: #a0522d; }
+        #recipe-10 h1 { border-color: #9a6324; }
+        .toc-item-11 .toc-num { color: #9a6324; }
+        #recipe-11 h1 { border-color: #a52a2a; }
+        .toc-item-12 .toc-num { color: #a52a2a; }
+
         .recipe h3 {
-            font-size: 1.1em;
-            margin: 20px 0 10px 0;
-            color: #5c4d3a;
+            font-weight: normal;
+            font-size: 18px;
+            margin: 22px 0 8px;
+            color: var(--muted);
             font-style: italic;
         }
-        
-        .recipe ul {
-            margin: 10px 0 20px 20px;
+
+        .recipe ul,
+        .recipe ol {
+            margin: 8px 0 20px 22px;
         }
-        
+
         .recipe li {
-            margin: 8px 0;
+            margin: 7px 0;
             line-height: 1.5;
         }
-        
-        .recipe ol {
-            margin: 10px 0 20px 20px;
-        }
-        
+
         .recipe ol li {
-            margin: 12px 0;
-            line-height: 1.6;
+            margin: 11px 0;
         }
-        
+
         .note {
-            background: #fef5e7;
-            border-left: 4px solid #d4a574;
-            padding: 12px;
+            background: var(--paper);
+            border-left: 3px solid var(--light-tan);
+            padding: 12px 14px;
             margin: 15px 0;
             font-style: italic;
-            color: #6b5d4f;
+            color: var(--muted);
         }
-        
+
         .stovetop {
-            background: #f5f0e8;
-            border-left: 4px solid #8b6914;
+            background: var(--paper);
+            border: 1px solid var(--light-tan);
             padding: 15px;
             margin: 20px 0;
             line-height: 1.7;
-            color: #3d3426;
         }
-        
+
+        .stovetop strong {
+            font-weight: normal;
+            color: var(--green);
+        }
+
         .nav {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: #4a3f2e;
-            padding: 15px;
+            background: var(--heading);
+            padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
             z-index: 100;
         }
-        
-        .nav button {
-            background: #8b6914;
-            color: #fffef9;
-            border: none;
-            padding: 12px 24px;
+
+        .nav button,
+        .home-btn {
+            background: transparent;
+            color: var(--parchment);
+            border: 1px solid var(--tan);
+            padding: 10px 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             font-size: 16px;
-            border-radius: 5px;
             cursor: pointer;
-            font-weight: 600;
             min-width: 80px;
         }
-        
-        .nav button:active {
-            background: #6b5410;
+
+        .nav button:active,
+        .nav button:hover:not(:disabled) {
+            background: var(--green);
+            border-color: var(--green);
         }
-        
+
         .nav button:disabled {
-            background: #6b5d4f;
-            cursor: not-allowed;
-            opacity: 0.5;
+            opacity: 0.35;
+            cursor: default;
         }
-        
+
         .counter {
-            color: #faf8f5;
-            font-weight: 600;
+            color: var(--parchment);
             font-size: 16px;
         }
-        
+
         .home-btn {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #8b6914;
-            color: #fffef9;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 600;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            top: calc(14px + env(safe-area-inset-top));
+            right: 16px;
+            background: var(--paper);
+            color: var(--heading);
+            border-color: var(--light-tan);
+            padding: 8px 16px;
             z-index: 100;
         }
-        
-        .home-btn:active {
-            background: #6b5410;
+
+        .home-btn:hover {
+            border-color: var(--tan);
         }
-        
+
         .toc {
             min-height: 100vh;
-            background: #fffef9;
-            padding: 20px 20px 80px 20px;
+            padding: calc(30px + env(safe-area-inset-top)) 20px calc(100px + env(safe-area-inset-bottom));
         }
-        
+
         .toc.hidden {
             display: none;
         }
-        
+
+        .toc-icon {
+            display: block;
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 6px;
+        }
+
         .toc h1 {
-            font-size: 2em;
-            margin-bottom: 5px;
-            color: #4a3f2e;
+            font-family: 'Rug Pull', Georgia, serif;
+            font-weight: normal;
+            font-size: 42px;
+            letter-spacing: 1px;
+            line-height: 1.1;
+            margin-bottom: 6px;
+            color: var(--heading);
             text-align: center;
         }
-        
+
         .toc .subtitle {
             text-align: center;
-            color: #8b7355;
+            color: var(--muted);
             font-style: italic;
-            margin-bottom: 30px;
-            font-size: 0.9em;
+            margin-bottom: 26px;
         }
-        
+
         .toc-list {
             list-style: none;
-            margin: 0;
-            padding: 0;
+            background: var(--paper);
+            border: 1px solid var(--light-tan);
         }
-        
-        .toc-list li {
-            margin: 0;
-            padding: 0;
-        }
-        
+
         .toc-list button {
+            display: flex;
+            align-items: baseline;
             width: 100%;
             text-align: left;
-            background: #fffef9;
+            background: none;
             border: none;
-            border-bottom: 1px solid #e8dcc8;
-            padding: 18px 15px;
-            font-size: 1.1em;
+            border-bottom: 1px dotted var(--light-tan);
+            padding: 15px 16px;
+            font-family: inherit;
+            font-size: 17px;
+            color: var(--heading);
             cursor: pointer;
-            transition: background 0.2s;
-            font-weight: 600;
         }
-        
-        /* Individual TOC item colors */
-        .toc-item-1 { color: #8b6914; }
-        .toc-item-2 { color: #b8572a; }
-        .toc-item-3 { color: #a0826d; }
-        .toc-item-4 { color: #c9882a; }
-        .toc-item-5 { color: #8b4513; }
-        .toc-item-6 { color: #6b5d4f; }
-        .toc-item-7 { color: #d4a574; }
-        .toc-item-8 { color: #daa520; }
-        .toc-item-9 { color: #7c9a5c; }
-        .toc-item-10 { color: #a0522d; }
-        .toc-item-11 { color: #9a6324; }
-        .toc-item-12 { color: #a52a2a; }
-        
-        .toc-list button:active {
-            background: #f5f0e8;
-        }
-        
-        .toc-list button:last-child {
+
+        .toc-list li:last-child button {
             border-bottom: none;
         }
-        
-        /* Add padding to bottom of recipes for nav clearance */
-        .recipe {
-            padding-bottom: 80px;
+
+        .toc-list button:hover,
+        .toc-list button:active {
+            background: var(--parchment);
+            color: var(--green);
         }
-        
-        /* Touch-friendly spacing */
-        @media (max-width: 768px) {
-            .recipe {
-                padding: 15px;
-            }
-            
+
+        .toc-num {
+            font-family: 'Rug Pull', Georgia, serif;
+            min-width: 32px;
+        }
+
+        .install-hint {
+            position: relative;
+            margin-top: 20px;
+            padding: 14px 40px 14px 16px;
+            background: var(--paper);
+            border: 1px solid var(--tan);
+            font-size: 15px;
+        }
+
+        .install-hint .dismiss {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: none;
+            border: none;
+            color: var(--tan);
+            font-size: 20px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+
+        .credit {
+            text-align: center;
+            margin-top: 24px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        a {
+            color: var(--green);
+        }
+
+        @media (max-width: 600px) {
             .recipe h1 {
-                font-size: 1.5em;
+                font-size: 26px;
             }
         }
     </style>
-    <link rel="apple-touch-icon" href="icon.webp">
-    <link rel="icon" type="image/webp" href="icon.webp">
 </head>
 <body>
     <div class="container">
         <!-- Table of Contents -->
         <div class="toc" id="toc">
+            <img class="toc-icon" src="icons/icon.svg" alt="">
             <h1>Soup Brother</h1>
             <p class="subtitle">Instant Pot recipes with stovetop adaptations</p>
             <ul class="toc-list">
-                <li><button onclick="showRecipe(0)" class="toc-item-1">1. Classic Chicken Soup</button></li>
-                <li><button onclick="showRecipe(1)" class="toc-item-2">2. Mexican Albondigas Soup</button></li>
-                <li><button onclick="showRecipe(2)" class="toc-item-3">3. Rice Congee</button></li>
-                <li><button onclick="showRecipe(3)" class="toc-item-4">4. Peanut Coconut Chicken Curry</button></li>
-                <li><button onclick="showRecipe(4)" class="toc-item-5">5. White Bean & Sausage Stew</button></li>
-                <li><button onclick="showRecipe(5)" class="toc-item-6">6. Ginger-Lemongrass Miso Soup with Seared Beef</button></li>
-                <li><button onclick="showRecipe(6)" class="toc-item-7">7. Thai Coconut Curry with Squash & Chicken</button></li>
-                <li><button onclick="showRecipe(7)" class="toc-item-8">8. Greek Avgolemono</button></li>
-                <li><button onclick="showRecipe(8)" class="toc-item-9">9. Pozole Verde</button></li>
-                <li><button onclick="showRecipe(9)" class="toc-item-10">10. Moroccan Lentil Soup with Sweet Potato</button></li>
-                <li><button onclick="showRecipe(10)" class="toc-item-11">11. West African Peanut Stew</button></li>
-                <li><button onclick="showRecipe(11)" class="toc-item-12">12. Mixed Bean Chili with Beef</button></li>
+                <li><button onclick="showRecipe(0)" class="toc-item-1"><span class="toc-num">1</span>Classic Chicken Soup</button></li>
+                <li><button onclick="showRecipe(1)" class="toc-item-2"><span class="toc-num">2</span>Mexican Albondigas Soup</button></li>
+                <li><button onclick="showRecipe(2)" class="toc-item-3"><span class="toc-num">3</span>Rice Congee</button></li>
+                <li><button onclick="showRecipe(3)" class="toc-item-4"><span class="toc-num">4</span>Peanut Coconut Chicken Curry</button></li>
+                <li><button onclick="showRecipe(4)" class="toc-item-5"><span class="toc-num">5</span>White Bean & Sausage Stew</button></li>
+                <li><button onclick="showRecipe(5)" class="toc-item-6"><span class="toc-num">6</span>Ginger-Lemongrass Miso Soup with Seared Beef</button></li>
+                <li><button onclick="showRecipe(6)" class="toc-item-7"><span class="toc-num">7</span>Thai Coconut Curry with Squash & Chicken</button></li>
+                <li><button onclick="showRecipe(7)" class="toc-item-8"><span class="toc-num">8</span>Greek Avgolemono</button></li>
+                <li><button onclick="showRecipe(8)" class="toc-item-9"><span class="toc-num">9</span>Pozole Verde</button></li>
+                <li><button onclick="showRecipe(9)" class="toc-item-10"><span class="toc-num">10</span>Moroccan Lentil Soup with Sweet Potato</button></li>
+                <li><button onclick="showRecipe(10)" class="toc-item-11"><span class="toc-num">11</span>West African Peanut Stew</button></li>
+                <li><button onclick="showRecipe(11)" class="toc-item-12"><span class="toc-num">12</span>Mixed Bean Chili with Beef</button></li>
             </ul>
+            <div class="install-hint" id="installHint" hidden>
+                <button class="dismiss" onclick="dismissInstallHint()" aria-label="Dismiss">×</button>
+                To keep this on your phone like an app, tap <strong>Share</strong> then <strong>Add to Home Screen</strong>. Works offline once it's there.
+            </div>
+            <p class="credit">Made by <a href="https://mgilvryallen.com" target="_blank">M'Gilvry Allen</a></p>
         </div>
 
         <!-- Recipe 1: Classic Chicken Soup -->
         <div class="recipe" id="recipe-0">
-            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <button class="home-btn" onclick="showTOC()">☰ menu</button>
             <h1>Classic Chicken Soup</h1>
             
             <h3>Ingredients:</h3>
@@ -312,7 +381,7 @@
 
         <!-- Recipe 2: Albondigas -->
         <div class="recipe" id="recipe-1">
-            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <button class="home-btn" onclick="showTOC()">☰ menu</button>
             <h1>Mexican Albondigas Soup</h1>
             <h3>Meatballs:</h3>
             <ul>
@@ -368,7 +437,7 @@
 
         <!-- Recipe 3: Rice Congee -->
         <div class="recipe" id="recipe-2">
-            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <button class="home-btn" onclick="showTOC()">☰ menu</button>
             <h1>Rice Congee</h1>
             <h3>Ingredients:</h3>
             <ul>
@@ -412,7 +481,7 @@
 
         <!-- Recipe 4: Peanut Coconut Curry -->
         <div class="recipe" id="recipe-3">
-            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <button class="home-btn" onclick="showTOC()">☰ menu</button>
             <h1>Peanut Coconut Chicken Curry</h1>
             <h3>Ingredients:</h3>
             <ul>
@@ -455,7 +524,7 @@
 
         <!-- Recipe 5: Bean & Sausage Stew -->
         <div class="recipe" id="recipe-4">
-            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <button class="home-btn" onclick="showTOC()">☰ menu</button>
             <h1>White Bean & Sausage Stew</h1>
             <h3>Ingredients:</h3>
             <ul>
@@ -502,7 +571,7 @@
 
         <!-- Recipe 6: Ginger-Lemongrass Miso -->
         <div class="recipe" id="recipe-5">
-            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <button class="home-btn" onclick="showTOC()">☰ menu</button>
             <h1>Ginger-Lemongrass Miso Soup with Seared Beef</h1>
             <h3>Broth Ingredients:</h3>
             <ul>
@@ -553,7 +622,7 @@
 
         <!-- Recipe 7: Thai Coconut Curry -->
         <div class="recipe" id="recipe-6">
-            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <button class="home-btn" onclick="showTOC()">☰ menu</button>
             <h1>Thai Coconut Curry with Squash & Chicken</h1>
             <h3>Ingredients:</h3>
             <ul>
@@ -599,7 +668,7 @@
 
         <!-- Recipe 8: Avgolemono -->
         <div class="recipe" id="recipe-7">
-            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <button class="home-btn" onclick="showTOC()">☰ menu</button>
             <h1>Greek Avgolemono (Chicken Lemon Soup)</h1>
             <h3>Ingredients:</h3>
             <ul>
@@ -641,7 +710,7 @@
 
         <!-- Recipe 9: Pozole Verde -->
         <div class="recipe" id="recipe-8">
-            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <button class="home-btn" onclick="showTOC()">☰ menu</button>
             <h1>Pozole Verde</h1>
             <h3>Ingredients:</h3>
             <ul>
@@ -684,7 +753,7 @@
 
         <!-- Recipe 10: Moroccan Lentil -->
         <div class="recipe" id="recipe-9">
-            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <button class="home-btn" onclick="showTOC()">☰ menu</button>
             <h1>Moroccan Lentil Soup with Sweet Potato</h1>
             <h3>Ingredients:</h3>
             <ul>
@@ -732,7 +801,7 @@
 
         <!-- Recipe 11: West African Peanut Stew -->
         <div class="recipe" id="recipe-10">
-            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <button class="home-btn" onclick="showTOC()">☰ menu</button>
             <h1>West African Peanut Stew</h1>
             <h3>Ingredients:</h3>
             <ul>
@@ -779,7 +848,7 @@
 
         <!-- Recipe 12: Mixed Bean Chili -->
         <div class="recipe" id="recipe-11">
-            <button class="home-btn" onclick="showTOC()">☰ Menu</button>
+            <button class="home-btn" onclick="showTOC()">☰ menu</button>
             <h1>Mixed Bean Chili with Beef</h1>
             <h3>Ingredients:</h3>
             <ul>
@@ -850,6 +919,7 @@
                 document.getElementById('recipe-' + i).classList.remove('active');
             }
             currentRecipe = -1;
+            history.replaceState(null, '', location.pathname + location.search);
             updateNav();
             window.scrollTo(0, 0);
         }
@@ -861,6 +931,7 @@
             }
             document.getElementById('recipe-' + index).classList.add('active');
             currentRecipe = index;
+            history.replaceState(null, '', '#' + (index + 1));
             updateNav();
             window.scrollTo(0, 0);
         }
@@ -940,8 +1011,38 @@
             }
         });
         
-        // Initialize
-        updateNav();
+        // ---- App setup ----
+
+        function isStandalone() {
+            return matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+        }
+
+        function dismissInstallHint() {
+            localStorage.setItem('soupBrotherHideInstallHint', 'true');
+            document.getElementById('installHint').hidden = true;
+        }
+
+        const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        if (isIOS && !isStandalone() && !localStorage.getItem('soupBrotherHideInstallHint')) {
+            document.getElementById('installHint').hidden = false;
+        }
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+
+        // #3 opens recipe 3, so a single recipe can be linked
+        function showRecipeFromHash() {
+            const index = parseInt(location.hash.slice(1)) - 1;
+            if (index >= 0 && index < totalRecipes) {
+                showRecipe(index);
+            } else {
+                updateNav();
+            }
+        }
+
+        window.addEventListener('hashchange', showRecipeFromHash);
+        showRecipeFromHash();
     </script>
 </body>
 </html>
