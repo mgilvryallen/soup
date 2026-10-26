@@ -1,6 +1,6 @@
 {
-  "name": "Soup Brother",
-  "short_name": "Soup Brother",
+  "name": "Soup",
+  "short_name": "Soup",
   "description": "12 favorite soups for the Instant Pot, with stovetop adaptations.",
   "start_url": "./",
   "scope": "./",

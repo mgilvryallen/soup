@@ -1,4 +1,4 @@
-# Soup Brother
+# Soup
 
 12 of my favorite soups to make in the Instant Pot, each with a stovetop version.
 
