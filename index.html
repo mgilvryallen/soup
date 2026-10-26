@@ -1027,7 +1027,8 @@
             document.getElementById('installHint').hidden = false;
         }
 
-        if ('serviceWorker' in navigator) {
+        // Skipped on localhost so local edits show up right away
+        if ('serviceWorker' in navigator && location.hostname !== 'localhost') {
             navigator.serviceWorker.register('sw.js');
         }
 
