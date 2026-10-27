@@ -43,6 +43,16 @@
             box-sizing: border-box;
         }
 
+
+        /* Rebalance lines so text never ends on one lonely word, and headings break evenly */
+        p, label, li, .note, .suspect, .stovetop {
+            text-wrap: pretty;
+        }
+
+        h1, h2, h3 {
+            text-wrap: balance;
+        }
+
         body {
             font-family: 'Lumios Typewriter', Georgia, serif;
             font-size: 17px;
@@ -338,7 +348,7 @@
                 <button class="dismiss" onclick="dismissInstallHint()" aria-label="Dismiss">×</button>
                 To keep this on your phone like an app, tap <strong>Share</strong> then <strong>Add to Home Screen</strong>. Works offline once it's there.
             </div>
-            <p class="credit">Made by <a href="https://mgilvryallen.com" target="_blank">M'Gilvry Allen</a> · <a href="https://github.com/mgilvryallen/soup" target="_blank">make your own copy</a></p>
+            <p class="credit">Made by <a href="https://mgilvryallen.com" target="_blank">M'Gilvry Allen</a><br><a href="https://github.com/mgilvryallen/soup" target="_blank">make your own copy</a></p>
         </div>
 
         <!-- Recipe 1: Classic Chicken Soup -->
